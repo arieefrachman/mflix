@@ -108,7 +108,7 @@ export default class MoviesDAO {
     */
 
     const searchGenre = Array.isArray(genre) ? genre : genre.split(", ")
-    
+
     const query = {genres: {$in: searchGenre}}
     const project = {}
     const sort = DEFAULT_SORT
@@ -212,12 +212,13 @@ export default class MoviesDAO {
    * @returns {GetMoviesResult} An object with movie results and total results
    * that would match this query
    */
-  static async getMovies({
-    // here's where the default parameters are set for the getMovies method
+  static async getMovies(
+    {
     filters = null,
     page = 0,
     moviesPerPage = 20,
-  } = {}) {
+    } = {
+    }) {
     let queryParams = {}
     if (filters) {
       if ("text" in filters) {
@@ -252,7 +253,8 @@ export default class MoviesDAO {
 
     // TODO Ticket: Paging
     // Use the cursor to only return the movies that belong on the current page
-    const displayCursor = cursor.limit(moviesPerPage)
+    //const displayCursor = cursor.limit(moviesPerPage)
+    const displayCursor = cursor.skip(page).limit(moviesPerPage)
 
     try {
       const moviesList = await displayCursor.toArray()
